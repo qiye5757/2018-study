@@ -1,4 +1,4 @@
-## PHP手册阅读（-）  
+## PHP手册阅读（-）之入门指引
 
 1. [序言](#preface)
 2. [简介](#overview)
@@ -16,4 +16,3 @@
 
 ### <span id = "install-config">安装与配置</span>
 + SAPI是PHP提供给服务器（并不是所有）的一套接口，服务器通过调用接口将PHP作为一个模块使用，或者使用ISAPI，也可以将PHP作为一个CGI或者FastCGI程序来使用，这意味着你需要设置服务器来使用PHP的CGI程序来处理服务器上的所有PHP的文件请求
-+ 
