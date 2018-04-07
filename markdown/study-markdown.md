@@ -26,7 +26,7 @@
 
 ### <span id = "code-block">代码区块 </span>
 
-+ 使用四个空行或者一个tab
++ 使用两次 `四个空行或者一个tab`
 
 ### <span id = "emphasize">强调</span>
 
