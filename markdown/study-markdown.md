@@ -35,6 +35,7 @@
 ### <span id = "list">列表</span>
 
 + 使用 · 或者 + 或者 - 表示无序列表
++ 使用数字表示有序列表
 
 ### <span id = "cut-line">分割线</span>
 
