@@ -78,3 +78,7 @@
 8. 获取配置
 
 	+ git中有各种工具，config只是其中的一种
+
+		+ git help 工具
+		+ git 工具 --help
+		+ man git-工具
