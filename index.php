@@ -49,7 +49,7 @@ foreach($dir_list as $key => $value){
                 height:100%;
                 width: 85%;
                 overflow: auto;
-								padding: 30px;
+				padding: 30px;
           }
         </style>
     </head>
@@ -74,7 +74,7 @@ foreach($dir_list as $key => $value){
         // alert(file_name);
         $.ajax({
           url:"./file.php",
-					type:'post',
+		  type:'post',
           data: {
             'file_name': file_name
           },
