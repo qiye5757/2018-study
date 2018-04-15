@@ -8,12 +8,14 @@
  * @copyright (Original Markdown) 2004-2006 John Gruber <https://daringfireball.net/projects/markdown/>
  */
 
-namespace Michelf;
+//namespace Michelf;
+
+//require 'MarkdownInterface.php';
 
 /**
  * Markdown Parser Class
  */
-class Markdown implements MarkdownInterface {
+class Markdown {
 	/**
 	 * Define the package version
 	 * @var string
