@@ -5,5 +5,6 @@ return [
    'git-study',
    'linux',
    'markdown',
-   'php-manual-read'
+   'php-manual-read',
+   'php'
 ];
