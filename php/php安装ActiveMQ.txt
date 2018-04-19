@@ -1,0 +1,37 @@
+安装activeMQ
+http://activemq.apache.org/getting-started.html
+
+命令：
+activemq stop|start|console
+安装完毕后，访问：
+网址：http://127.0.0.1:8161/admin/
+登录：admin
+密码：admin
+
+安装php stomp扩展
+http://php.net/manual/zh/book.stomp.php
+
+#下载
+$ wget http://pecl.php.net/get/stomp-2.0.1.tgz
+$ tar zxf stomp-2.0.1.tgz
+$ cd stomp-2.0.1
+#通过phpize 生成编译所需配置文件 [注1]
+$ /Applications/AMPPS/php-7.1/bin/phpize
+#编译安装三部曲1/configure 2/make 3/make install
+$ ./configure  CFLAGS="-arch i386"  --with-php-config=/Applications/AMPPS/php-7.1/bin/php-config
+$ make && make install
+
+
+开发策略：
+一个设备一个topic
+/topic/account
+每次都启动轮训脚本，都从最新一条数据（作为起点）开始计数
+每次取出起点以后的0，1000，循环处理，按照设备ID分别放入不同的topic
+以本次实际取出的条数+本次起点，作为下次循环的起点
+每次轮训间等待10秒
+
+没有异常时，持续循环执行。
+
+
+
+
