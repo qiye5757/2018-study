@@ -1,5 +1,9 @@
 ## git学习（-）之简介
 
+### 阅读网站
+
+[https://git-scm.com/book/zh](https://git-scm.com/book/zh)
+
 ### 版本控制历史
 
 1. 本地版本控制系统
