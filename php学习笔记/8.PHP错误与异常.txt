@@ -1,0 +1,128 @@
+error_reporting        错误级别
+error_log              日志发送地方
+1.错误报告及设置级别
+   语法错误 
+   运行时错误
+   逻辑错误
+   Notice
+   Warning
+   Fatal error
+
+    致命                  E_ERROR        1
+    警告                  E_WARNING      2 
+    语法解析错误          E_PARSE        4
+    注意                  E_NOTICE       8   
+    php启动时的致命错误   E_CODE_        16
+               警告】                    32
+    编译时候的致命错误    E_COMPILE_     64 
+              警告                       128
+    用户自定义的致命错误  E_USER_        256
+                警告                     512
+		注意                     1024
+    编码标准化警告        E_STPICT       2048
+    所有的错误，警告和注意信息   E_ALL   6143
+	  
+   display_errors:是否开启php输出错误报告的功能
+
+   1.配置文件的修改
+   ~除了
+   error_reporting
+   2.error_reporting()函数  设置不同的错误报告级别
+
+
+2.自定义PHP的错误报告处理方式
+   错误提示放在每个网站的最下面
+   自己写一个函数
+        set_error_handler(callback function,error_type)
+	设置用户自定义的错误处理函数
+	error_type  可选，规定在那个错误报告级别会显示用户定义的错误
+
+	callback函数即为你自定义的那个函数
+	handler(int,string,[string[int[array]]])
+	第一个参数是错误级别
+	第二个参数是错误消息
+	第三个参数是错误所在的文件
+	第四个参数是第几行
+	第五个参数是一个指向错误发生时活动符号表的array，这个数组会包含错误触发处作用域内所有变量的数组
+
+
+3.记录错误日志
+      error_log  发送错误信息到某个地方
+         string,[int[,string[,string]]]
+	 第一个参数  应该被记录的错误信息
+	 第二个参数  设置错误应该发送到何
+	    0   php系统日志
+	    1   第三个参数参数设置的邮件地址
+	    2   不在是一个选项
+	    3   位置为第三个参数的文件里
+	    4   直接发送到SPAI的日志处理程序中
+	 第三个参数  目标。由第二个参数决定
+	 第四个参数  额外的头。当第二个参数设置为1的时候使用，该信息类型使用了mail()的同一个内置函数
+
+    //php.ini中
+    display_errors  所有错误日志就关掉了
+    log_errors=on   错误日志开启，在apache日志中可以找到
+       error_log=syslog  开启就可以在系统日志里面查找错误
+   error_log=“文件”
+       
+
+
+
+
+
+       error_reporting = E_ALL     //将向PHP发送每个错误
+       display_errors=Off          //不显示错误报告
+       log_errors=On               //决定日志语句记录的位置
+       log_errors_max_log=1024     // 每个日志项的最大长度
+       error_log=G:/myerror.log    //指定错误写进的文件
+
+       在文件中
+       ini.set
+       ini.get
+
+4.php异常处理1
+try{
+
+}catch(Exception $e){
+
+}
+      1. try catch是一体
+      2. try catch之间不能有任何代码
+      工作原理:
+      1.试着执行try中的代码，如果没有问题，继续执行catch之后的代码
+      2.抛出日常  throw new Exception("  ");   exception是系统自定义的类
+      3.如果有异常对象抛出，就将异常对象给catch()中的类
+      4.try中发生异常位置后的代码不再执行，而是直接到catch中，catch执行完以后，再继续执行catch之后的代码
+      5.getMessage()读出异常消息
+
+     eg:
+
+
+     try{
+           echo "abc";
+	   throw new Exception("avc00x");
+     }catch(Exception $e){
+         $e -> getMessage();
+	 echo 'abcc';
+     }
+
+
+5.php异常处理2
+  自定义函数抛出异常try  catch    throw在一个自定义的函数中，这个函数在try里面运行  
+
+
+6.自定义异常类   
+   1.系统有自定义的异常类 Exception  
+   方法只有构造方法和__tostring类没用final修饰
+   2.自定义的异常类，必须是系统类Exception的子类
+   3.如果继承Exception类，重写了构造方法，一定要调用一下父类中被覆盖的方法
+
+
+7.捕获多个异常
+  一个try可以有多个catch
+  最后一个放上Exception  前面都是自定义的异常类，最后一个捕获漏网之鱼的
+  而且异常可以嵌套
+   
+   
+
+

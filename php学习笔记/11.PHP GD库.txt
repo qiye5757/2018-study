@@ -1,0 +1,72 @@
+1.创建php画图的步骤:
+    1. 创建一个背景图片，也叫画布，以后的操作都基于此背景图片。
+    imagecreatetruecolor()  两个属性  分别是长和宽
+    创建画笔:
+     $white = imagecolorallocate($img,0xFF,0XFF,0xFF);
+    2. 在背景上绘制图像轮廓或输入文本
+    3. 保存或者发送给浏览器
+    imagepng()   imagejpeg()等等
+    两个参数，写第二个参数是保存，不写第二个参数是输出给浏览器，前面得加一个头信息
+    第三种新建一个html  <image src="a.php" />
+    4. 释放资源
+    imagedestroy($img);
+
+
+
+    2.imageline                画一条线
+      imagesetpixel            画一个单一像素
+      imagefill                区域填充
+      imagerectangle           画一个矩形    资源  左上角  右下角   颜色
+      imagefilledrectangle     画一个填充的矩形
+      imageellipse             画一个椭圆    资源 中心点 宽  高  颜色
+      imagefilledellipse       画一个填充的椭圆
+      imagearc                 画椭圆弧      资源 中心点 宽  高  起始点  最后点  0是位于三点钟方向
+      imagefilledarc           填充的圆弧
+      imagestring              水平的画一行字符串    资源  大小  坐标  字符串  颜色
+      imagestringup            垂直的画一行字符串
+      imagechar                水平的画一个字符
+      imagettftext             用 TrueType 字体向图像写入文本   资源  尺寸  角度  位置   颜色  什么字体   文本     
+      想要重影的话写两遍
+
+
+
+
+2.画时钟
+3.验证码的设计
+4.GD库的第二个功能  对原有的图片进行处理
+imagecreatefromgif
+imagecreatefromjpeg
+imagecreatefrompng
+
+
+getimagesize    取得图像大小，类型等信息
+imagefontwidth  取得文字宽度
+imagefontheight 取得文字高度
+imagesx         取得图像宽度
+imagesy         取得图像高度
+通过变量函数来创建多种类型的图片
+
+
+缩放和剪切
+imagecopyresized     
+imagecopyresampled     目标资源   原图资源    分别得坐标  分别得宽高度 
+差不多  推荐使用第二种
+等比例的缩放  有算法
+
+
+添加水印
+1.文字水印
+imagestring
+2.图片水印
+imagecopy      目标资源   原图资源    分别得坐标    原图资源的宽和高
+
+
+
+图片的旋转和翻转
+
+
+
+
+
+
+

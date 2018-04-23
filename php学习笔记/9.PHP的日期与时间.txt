@@ -1,0 +1,52 @@
+1.php中应用日期和时间
+    时间戳
+
+     2014-02-14 11:21:21
+
+     02/14/2014  11:11:11
+
+     时间戳：
+     1.是一个整数
+     2.1970.1.1  00:00:00  到现在的秒数  方便计算
+
+  
+
+     time()函数  返回一个时间戳
+     date()函数  格式化一个本地时间/日期
+     两个参数，第一个参数，显示时间的文本格式，第二个参数是要显示文本时间的变量，
+
+     第一个参数:
+       日:  月份中的d j和S 或者星期几  D  I  N  w    年份中的z
+       星期:  W
+       月:    F   m   M   n  t
+       年:   L  是否为闰年    o   Y   y
+       时间:  a  A   B  g  G  h  H   i  s  
+       时区:   e    I   O   p   T    Z
+
+     
+
+     php默认时区是0时区   中国位于东8区
+     deta_default_timesone_get()
+     deta_default_timesone_set()
+     prc   
+     Asia/Shanghai
+
+
+
+2.mktime   取得一个日期的Unix时间戳  单个值转换
+   时分秒月日年
+   floor   四舍五入
+  strtotime();   将任何英文文本的日期时间解析为Unix时间戳
+  
+  microtime   返回Unix时间戳和微秒数
+
+
+   &nbsp;  空格
+     
+strtotime           将任何英文文本的转为时间戳
+time    microtime    返回当前时间的unix时间戳
+mktime             取得一个日期的unix时间戳   多个整数转换
+
+date  默认值为time()
+
+

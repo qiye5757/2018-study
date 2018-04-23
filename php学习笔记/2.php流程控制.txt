@@ -1,0 +1,4 @@
+1.break
+2.continue
+3.exit
+4.goto   5.2рт╨С

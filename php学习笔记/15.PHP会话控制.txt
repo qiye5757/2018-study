@@ -1,0 +1,162 @@
+1.  http协议请求:请求行，请求头信息，空行，请求的内容
+    响应:响应行，响应头，空行，响应内容
+    http协议的过程:建立TCP连接，多次请求，多次响应，关闭连接。
+
+    一个http请求消息，包括一个请求行，多个消息头，加上实体内容,get或者post
+    响应代表服务器端向客户端回送的数据：状态行，若干个消息头，实体内容
+    头格式：字段名称 冒号 空格 值 回车 换行符
+2.http协议
+2.1主要特点：支持客户/服务器模式。
+             简单快速，只需传送请求方法和路径
+	     灵活：可以传输任意类型的数据对象
+	     无连接：每次连接只处理一个请求
+	     无状态：无记忆能力
+2.2HTTP详解之URL
+    http(超文本传输协议)是基于请求和响应的模式的，无状态的，应用层的协议，常基于TCP的连接方式
+    http://host [":"port][abs_path]
+2.3请求行的格式 方法符号+空格+URl+空格+协议
+METHOD Request-URI HTTP-Version CRLF（CRLF表示回车和换行）
+  GET    URL所标识的资源
+  POST   在URL所标识的资源后附加新的数据
+  HEAD   请求获取由Request-URL所标识的资源的响应消息报头
+  PUT    请求服务器存储一个资源，并用Request—URL作为其标识
+  DELETE  删除资源
+  TRACE   用于测试或者诊断
+  CONNECT 保留
+  OPTIONS 查询服务器的性能，或者查询与资源相关的选项和需求
+2.4响应行的格式
+   HTTP-Version Status-Code Reason-Phrase CRLF
+   协议         状态码       状态文本描述
+   1xx：指示信息--请求已接受继续处理
+   2xx：成功--表示已经被成功接收，理解
+   3xx：重定向--要完成请求必须进一步操作
+   4xx:客户端错误
+   5xx：服务器端错误
+   200   OK
+   400   Bad Request  客户端请求有语法错误
+   401   Unauthorized 请求未经授权
+   403   Forbidden     拒绝提供服务
+   404   NOT Found     资源不存在
+   500                服务器发生未知错误
+   503  Server Unavailable  服务器当前不能处理客户端服务，一段时间后可能恢复
+2.5消息报头：分为普通报头，请求报头，响应报头，实体报头。
+   每一个报头都是由 名字+“:”+空格+值 组成，消息报头域的名字是和大小无关的。
+   1.普通报头
+    Cache-Control  指定缓存命令，缓存是单向的（响应中出现的在请求中不一定出现），且是独立的(一个消息的缓存指令不会影响另一个消息处理的缓存机制)
+    请求时的缓存指令包括：no-cache no-store max-age max-stale min-fresh only-if-cached
+    响应时的缓存指令包括;public private no-cache no-store no-transform  must-revalidate proxy-revalidate max-age s-maxage
+   
+   2.请求报头：
+   Accept:        浏览器可接受的MIME类型 
+   Accept-Charset:    浏览器通过这个头告诉服务器，它支持哪种字符集
+   Accept-Encoding:   浏览器能够进行解码的数据编码方式，比如gzip 
+   Accept-Language:    浏览器所希望的语言种类，当服务器能够提供一种以上的语言版本时要用到。 可以在浏览器中进行设置。
+   Host:           初始URL中的主机和端口 
+   Referer:        包含一个URL，用户从该URL代表的页面出发访问当前请求的页面 
+   Content-tType:    内容类型
+   If-Modified-Since: Wed, 02 Feb 2011 12:04:56 GMT利用这个头与服务器的文件进行比对，如果一致，则从缓存中直接读取文件。
+   User-Agent:浏览器类型.
+   Content-Length:表示请求消息正文的长度 
+   Connection:表示是否需要持久连接。如果服务器看到这里的值为“Keep -Alive”，或者看到请求使用的是HTTP 1.1（HTTP 1.1默认进行持久连接 
+   Cookie:这是最重要的请求头信息之一 
+   Date：Date: Mon, 22 Aug 2013 01:55:39 GMT请求时间GMT
+   
+   3.响应报头：
+   Location 重定向到另一个新的资源的位置
+   Server:apache 指示服务器的类型
+   Content-Encoding: gzip服务器发送的数据采用的编码类型
+   Content-Length: 80 告诉浏览器正文的长度
+   Content-Language: zh-cn服务发送的文本的语言
+   Content-Type: text/html; charset=utf-8服务器发送的内容的MIME类型
+   Last-Modified: Tue, 11 Jul 2013 18:23:51 GMT文件的最后修改时间
+   Refresh: 1;url=http://www.brophp.com 指示客户端刷新频率。单位是秒
+
+
+
+ 
+3.当前页面的变量 page：只能在声明处使用。
+ 两个页面之间传递  get
+ 会话级别  同一个用户访问同一个网站的多个页面，共享自己的变量 session
+ 全局变量  写到数据库或者文件中的，任何人都可以访问
+ cookie的使用:setcookie()将一个或者多个变量放到客户端cookie文件中
+  变量名  变量值   存储时间  范围   域名   只能使用安全的https传送
+ 所有客户端访问时自动将这个网站的cookie都带过来$_COOKIE(全局数组)
+ 删除cookie，设置时间，让这个变量在客户端过期就可以了
+
+
+
+4.session是在服务器端存数据
+数据通过session保存在服务器端的文件，分配一个独立的session码。cookie保存session码
+开启session.
+session_start()   前面不能有任何输出，这个函数向客户端发送一个session_id保存在cookie中，还在服务器中创建一个和保存在客户端重名的session文件，调用PHP的机制使用session
+判断是否有sessionid，直接使用这个session开启会话，直接找也不新创建文件了，直接使用同名的session文件
+存东西使用:$_SESSION这个数组
+
+清空SESSION的数据
+$_SESSION = array()，即session对应的这个用户文件的内容就空了
+彻底销毁session
+session_destroy()删除文件
+删除客户端cookieid
+if(isset($_COOKIE[session_name()])){
+setcookie(session_name(),"",time()-3600,"/");}
+
+session_id  设置或者获取session的id
+session_name  设置或者获取session的名字
+
+
+5.session的配置选项
+session_auto_start   自动开启
+session.cookie_lifetime  生存时间   也可以用ini_set()修改 
+如果为0，客户端关闭sessionID就会作废
+session.use_strict_mode    是否严格模式      默认为0(不启用)
+session.use_cookies        是否使用cookie    默认为1(启用)
+session.cookie_secure      是否通过安全连接发送cookie
+session.entropy_file       外部资源的路径    
+session.use_only_cookie    指定是否在客户端仅仅使用 cookie 来存放会话 ID    默认为1
+
+
+session.gc_probability 与 session.gc_divisor 合起来用来管理 gc（garbage collection 垃圾回收）进程启动的概率。默认为 1
+session.gc_divisor        如果为1000    则有1/1000的概率启动垃圾清除器
+
+
+
+6.基于URL传递session_id
+cookie 开启SID为空字符串      关闭时SID为session的名字和ID
+在链接后面直接加上SID
+eg:     $sid = !empty($_GET[session_name()]) ? $_GET[session_name()] : "";    即当cookie禁用时传参给$sid  没禁用时设置为空字符串
+       if( !$sid = " "){
+            session_id($sid);
+       }
+       session_start();
+
+
+在linux下自动给url后面传参数
+session.use_trans_sid      开启为1
+
+
+
+7邮件系统实例
+
+8.自定义session的存储方式
+专门拿一台服务器
+nfs   文件夹共享服务
+数据库
+memcache  所有服务器的
+no-sql数据库中
+
+
+
+9.session处理方式：file  或者  user   或者 memcache
+10.session的生命周期：
+      打开
+      读取数据
+      写入数据
+      关闭
+      销毁
+      垃圾回收
+
+session_set_save_handler("open","close","read","write","destroy","gc")
+open(string $savePath, string $sessionName)   在会话打开的时候被调用，成功返回true，失败返回false
+close  相当于析构函数，在write回调函数调用之后调用，当调用 session_write_close()  函数之后，也会调用 close 回调函数。 此回调函数操作成功返回 TRUE ，反之返回 FALSE 。 
+read(string $sessionId)    如果会话中有数据，read 回调函数必须返回将会话数据编码（序列化）后的字符串。 如果会话中没有数据，read 回调函数返回空字符串。 在自动开始会话或者通过调用 session_start()  函数手动开始会话之后，PHP 内部调用 read 回调函数来获取会话数据。 在调用 read 之前，PHP 会调用 open 回调函数。read 回调返回的序列化之后的字符串格式必须与 write 回调函数保存数据时的格式完全一致。 PHP 会自动反序列化返回的字符串并填充 $_SESSION   超级全局变量。 虽然数据看起来和 serialize()  函数很相似， 但是需要提醒的是，它们是不同的。
+write(string $sessionId, string $data) 

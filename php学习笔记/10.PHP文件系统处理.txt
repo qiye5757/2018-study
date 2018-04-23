@@ -1,0 +1,221 @@
+1.文件系统概述
+   php以unix的文件系统为模型的
+   block   块设备文件
+   char    字符设备
+   dir     目录类型
+   fifo    命名管道
+   file    普通文件类型
+   link    符号链接
+   unknown 未知类型
+
+   filetype
+
+   判断函数  is_上面那些
+
+2.文件的属性
+   1.文件时间
+    fileatime    取得文件的上次访问时间
+    filectime    取得文件的inode修改时间
+    filemtime    取得文件修改时间
+
+   
+    file_exists  检查文件或者目录是否存在
+    filesize     取得文件大小
+
+
+    is_readable
+
+
+ 3.目录的基本操作
+      1.解析目录路径
+           1.注意:所有的程序中，不管是什么操作系统，全部都使用"/"代表路径分隔符号 (php程序中，apache配置文件中，php的配置文件中，只要有目录的情况，全部使用/)
+	   2.windows下使用;   linux  :
+	   3.换行   windows  \r\n   linux  \n
+	   DIRECTORY_SEPARATOB    常量，用来表示分隔符
+	   PATH_SEPARATOB     目录分隔符
+           PHP_EOL     换行的常量
+    
+           4.   ./  当前目录
+	       ../  上级目录
+            
+
+	   5.不同的根路径
+	      在页面中解析路径的都是服务器的根目录
+              php处理的都是系统的根目录
+
+	   6.路径解析函数
+	      basename   从一个路径中将文件名取出来
+	         第二个参数 string $a   如果文件名是以a结束的，那这一部分也会被去掉   可有可无
+	      dirname   返回路径中的目录部分
+	      pathinfo  返回文件路径的信息
+	        这个函数会返回一个关联数组包含有path的属性，这个数组的单元分别为basename  dirname  extension扩展名
+              realpath  返回规范化的绝对路径名
+      2.遍历目录
+            glob   寻找与模式匹配的文件路径
+	    glob ("./")    * 所有文件
+
+
+	    opendir    打开目录
+	    closedir   关闭目录
+	    opendir    从目录句柄中读取条目  读到最后一个，再读就会变成false
+	    rewinddir  倒回句柄函数
+
+
+
+	    chdir       改变目录
+            chroot      改变根目录
+	    dir         directory类
+	    getcwd      取得当前工作目录
+	    scandir     列出指定路径中的文件和目录
+      3.统计目录大小
+            disk_free_space     返回目录中的可用空间
+	    disk_total_space    返回一个目录中的磁盘总大小
+	    eg:获取磁盘空间大小
+	       $tetal = disk_total_space("c:");
+               $free = disk_free_space("c:");
+
+               echo "c:盘的总大小:".round($tetal/pow(2,30))."G<br>";
+               echo "c:盘的可用空间:".round($free/pow(2,30))."G<br>";
+
+	    round四舍五入   floor舍去法取整   ceil进一法取整
+      4.建立与删除目录
+            删除空目录
+            mkdir      新建一个目录  第二个参数是权限
+	    rmdir      删除目录  只能删除空目录
+	    unlink     删除文件
+      5.复制目录
+            rename     移动文件和目录/重命名
+
+	    copy        拷贝文件
+
+
+
+
+4.文件的一些基本操作函数
+   touch    创建一个空文件
+   copy     复制文件
+   rename   重命名/移动
+   unlink   删除一个文件
+
+   ftruncate 文件截取函数
+
+   //对文件内容的操作
+
+   file_get_contents
+   file_put_contents  整体内容重新写
+
+   远程文件可以读，不能写
+
+   readfile
+
+   file
+
+
+5.文件的打开与关闭
+   fopen()
+   两个参数 ，第一个参数是打开文件的位置，第二个是模式
+   r    读
+   w    写 原来的文件内容被清除，没有会创建
+   a    写 将文件指针指向末尾
+   x    写 如果文件存在，调用失败
+   b    二进制打开，二进制一定要写
+   t    文本转换标记
+   fclose()关闭
+ 
+
+6.文件的内容操作
+   fwrite  三个参数
+   fgetc   一次读一个字符   一个参数 为一个打开的资源
+   feof    测试文件指针是否到了文件结束的位置  到文件结束时或者出现错误返回真
+   eg:  while(!feof($fp)){
+          echo fgetc($fp);
+   }
+   fgets   一次读一行  两个参数  第二个参数写多少
+   fread   读取文件
+    eg  echo  fread($fp,filesize(demo.txt))
+       
+        while(!feof($fp)){
+	       echo fread($fp,1024)
+	}
+
+
+
+
+
+   ftell  返回文件指针读写的位置
+   fseek  在文件中定位  三个参数  第二个参数是指针的位置，第三个参数是指针相对的位置   ‘
+   SEEK_SET    设定位置等于offset
+   SEEK_CUR    设定位置为当前位置加上offset
+   SEEK_END    设定位置为文件尾加上offset(要移动到文件尾之前的位置,
+   给offset传递一个负值)。
+   这个函数成功返回0，否则返回-1.
+
+   rewind     将文件指针移动回去
+
+   这些有关指针的函数只能跟读的有关
+
+
+7.flock   轻便的咨询文件锁定
+  三个参数  第一个必须是文件指针
+    第二个参数是以下值之一
+         LOCK_SH    取得共享锁定，读出的锁
+	 LOCK_EX    取得独占锁定，写入的锁
+	 LOCK_UN    释放锁定
+	 LOCK_NB    不希望锁定时堵塞 附加锁
+	 成功返回true，失败返回false
+
+
+
+8.文件上传
+     1.表单的上传   
+      method 一定为post   enctype   multipart/form-data
+      再加一个隐藏表单  用来提示文件上传过大
+      <input type="hidden" name="MAX_FILE_SIZE" value="1000000">
+     2.php配置文件中与文件上传有关的设置     
+      file_uploads
+      upload_max_filesize
+      post_max_szie
+
+
+      超全局数组 $_FILES  数组为一个二维数组
+       name 
+       type
+       size
+       tmp_name       文件上传后在服务器存储的临时全路径
+       error          文件上传的错误代码
+ 
+
+    3.将临时目录下的上传的文件，复制到我指定的目录下
+       move_uploaded_file    将临时目录下的文件，复制到我指定目录下，指定的名字就可以完成上传
+
+    
+
+9.处理多个文件的上传
+   客户端表单命名为pic[],服务端为3维数组
+
+
+
+
+10.文件上传类
+    get_class           得到一个对象所在的类的类名
+    get_parent_class    返回对象或者类的父类名
+    is_subclass_of      如果第一个属性是第二个属性的子类返回真，第一个属性是对象名，第二个属性是类名
+    is_a                如果第一个属性是第二个属性的父类返回真，第一个属性是对象名，第二个属性是类名
+    
+
+    get_class_vars      返回由类的默认属性组成的数组
+    get_class_methods   返回由类的方法名组成的数组
+    get_object_vars     返回由对象属性组成的关联数组
+  
+
+
+
+11.文件下载
+  浏览器认识的文件解析，不认识的提供下载
+       
+       header("")
+        Content-Disposition:attachment;filename=""
+	Content-Type
+	Content-Length
+       //当成附件来处理，浏览器就当做附件来下载
+      readfile():将文件内容全部输出

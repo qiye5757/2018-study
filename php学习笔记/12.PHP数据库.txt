@@ -1,0 +1,65 @@
+1.数据库连接模块mysql  mysqli
+  
+     mysql_connect()          数据库连接函数
+     mysql_error()            输出错误 
+     mysql_query()            在这个函数里面写数据库代码
+     mysql_select_db()        选择默认数据库
+     mysql_get_client_info()  获取客户端信息
+     libmysql是直接访问数据库的，而mysqlnd是通过Zend访问数据库。
+     mysql_get_host_info()    主机信息
+     mysql_get_server_info()  服务信息
+
+
+
+    语句分为两种:一种是没有结果的(执行成功返回真，失败返回假)增删改，一种是有结果的(执行成功返回结果集--资源)，处理资源，从结果集中将结果取出并格式化处理，查询。
+    mysql_query($sql);
+
+    mysql_affected_rows    取得前一次mysql操作所影响的记录行数
+    mysql_insert_id()      获取上一步insert操作产生的id
+
+
+
+
+    mysql_fetch_row();         //索引数组  第一列下表为0，第二列为1，以此类推
+    mysql_fetch_assoc();     // 关联数组下表是字段名称
+    mysql_fetch_array();     //索引数组和关联数组的组合  默认两个都返回
+    mysql_fetch_object();   //返回一个对象操作 成员属性是字段名称
+    
+    
+    1.返回默认值真指向的那条记录的结果
+    2.默认指针指向第一条(可以使用mysql_data_seek改变)
+    3.获取一条以后。指针自动下移，在使用同样的函数，则是获取下一条的
+    4.如果是最后一条,没有记录，再获取后返回false
+
+
+
+    获取字段信息的mysql_field_name()
+    mysql_num_rows();       共有多少条记录、
+    mysql_num_fields()      共有多少字段
+    mysql_field_result()    获取字段名
+
+
+
+
+2.分页算法 
+   1.总数
+   2.每页显示多少条
+   ceil()           进一取整法
+   floor()          舍去取整法
+   round()          四舍五入法
+   strstr()         查找字符串的首次出现
+   preg_match()     执行一个正则表达式匹配
+   stristr()        strstr 函数的忽略大小写版本
+   strpos()         查找字符串首次出现的位置
+   strrchr()        查找指定字符在字符串中的最后一次出现
+   substr()         返回字符串的子串
+   parse_url        解析 URL，返回其组成部分
+   parse_str        解析 query 字符串成变量，如果写上第二个参数就会返回数组。
+
+
+   mysql分页技术   limit
+
+
+
+
+3.图书管理

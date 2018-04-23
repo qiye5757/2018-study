@@ -1,0 +1,236 @@
+1.模板引擎:将View层前后台分离，让html文件好看。
+   处理过程:
+   先写几个模板html文件，文件中引用一些变量和其他的html区分开.
+   
+   一个smart类，包含显示和引用变量的类
+
+   处理的php程序:给变量赋值
+
+   结果:通过运行smart类中的
+
+
+2.修改smarty模板文件和新生成php路径的方法
+smarty3:
+ $smarty ->setTemplateDir("./views/");        设置模板目录
+ $smarty ->setCompileDir("./comps/");         设置编译目录
+smarty2:
+ $smarty ->template_dir = "";
+ $smarty ->compile_Dir = "";
+
+
+ 设置定界符号
+ $smarty ->left_delimiter = "<{";
+ $smarty ->right_delimiter = "}>";
+
+ 让定界符可以使用空格
+ $smarty ->auto_literal = false;
+
+ 在模板中添加图片必须得相对于php文件来写路径
+ 所有的模板路径都是相当于template_dir属性所定义的路径
+
+
+ 解决路径冲突最好的方法
+ 设置成为绝对路径
+ define("ROOT",str_replace("\\","/",dirname(__FILE__)))
+
+
+3.smarty模板设计者
+注释       {<*{<     >}*>} 会自动生成注释
+
+从php分配的变量 数组，对象，变量都可以，数组可以用.来引用
+从配置文件读取变量 配置文件中的变量需要通过用两个"#"或者是smarty的保留变量 $smarty.config.来调用
+保留变量    常量，现在的时间还有超全局数组
+变量调节器  就是在模板中使用各种方法来调节变量
+可以自定义变量调节器:在php函数中，或者使用setPluginsDir()来设置插件目录，然后再这个目录下建立变量调节器的函数，文件命名有规则 才能通过文件名 modifier.函数名.php 
+函数名要有规则，才能找到这个文件中的函数
+参数要有规则，第一个必须要处理的变量，第二个以后才是使用的变量
+
+
+4.模板中函数的使用
+自定义函数
+内置函数  写在smarty类中的
+
+
+
+函数的格式分两种：一种是有结束标记的，一种是没有结束标记的
+添加插件：addPluginsDir()   路径
+修改插件目录：setPluginsDir()    
+自定义函数：两种方式
+第一种是在php程序中声明
+registerPlugin()
+第二种是做成插件的形式
+文件名必须有规律   function.函数名.php
+声明的函数名必须有规则    smarty_function_函数名()
+参数
+   1.数组
+   2.smarty
+   function smarty_function_hello1($args,$smarty){
+   
+   }
+
+块状的自定义函数和上面的基本相同
+多一个标记中间的内容    
+4.引用参数  开始true    结束false
+function smarty_block_word1($args,$content,$smarty,&$repeat){
+
+}
+
+
+
+内置函数的使用:
+1.不常用的：
+php          已被smarty标签弃用
+include_php    已被smarty弃用
+include        包含模板文件
+literal      {literal}可以让一个模板区域的字符原样。在{literal}{/literal}               内的任何标签都不会被解析，原样输出。 
+ldelim redlim  左右标记符和保留变量中的{$smarty.ldelim}, {$smarty.rdelim}
+               一样，直接在页面上显示标记符
+capture           捕获，
+                  eg:
+		  <{capture  name="one"}>
+		  111111111111111
+		  <{capture}>
+		  就将这一行1捕获到one里，在需要显示的时候进行显示，保留变量中有一个$smarty.capture的变量，用名字可以取出来
+		  $smarty.capture.one
+insert            插入，废弃的不能在使用
+2.变量的声明
+php中变量的声明：smarty->assign()
+<?php
+// 传递键值对
+$smarty->assign('Name', 'Fred');
+$smarty->assign('Address', $address);
+
+// 传递联合数组
+$smarty->assign(array('city' => 'Lincoln', 'state' => 'Nebraska'));
+
+// 传递数组
+$myArray = array('no' => 10, 'label' => 'Peanuts');
+$smarty->assign('foo',$myArray);
+
+// 传递一行数据库的返回记录 (如 adodb)
+$sql = 'select id, name, email from contacts where contact ='.$id;
+$smarty->assign('contact', $db->getRow($sql));
+?>
+模板中变量的声明
+assign: 用于在模板运行期间赋值给变量    三个参数  名字 值 作用域 
+作用域：root 然后该变量在相关模板里面都可见。
+global：全局变量在任何模板内均可见。
+可选参数nocache
+三种方式
+<{assign var="one" value="hello world"}>
+<{assign "two" "this is a demo"}>
+<{$three="aaaaaaaa"}>
+
+3.append      运行时 为数组变量增加或者创建值。
+参数名称	类型	必选参数	默认值	说明
+var	string	Yes	n/a	赋值的变量名称
+value	string	Yes	n/a	赋予的值
+index	string	No	n/a	数组元素的新索引，如果没有提供此参数，则附加的值会加到数组最后。
+scope	string	No	n/a	赋值变量的访问范围: 'parent','root' 或 'global'
+4.在模板中使用if语句:和php中if差不多 ，只是格式得用smarty模板规定的样式
+<{if $name == 4}>
+############
+<{else if $name == 5}>
+@@@@@@@@@@@
+<{else}>
+##$$$$$$$$$$$$
+<{/if}>
+在模板中使用for循环    step 隔几个一循环
+<{for $var=0 to 10 step 3 max=3}>
+        条件成立循环<br>
+<{forelse}>
+        条件不成立循环<br>
+<{/for}>
+
+在模板中使用while循环，和php一样，和上面的if差不多
+<{while $foo > 0}>
+  <{$foo--}>
+<{/while}>
+
+在模板中使用函数
+<{function}>  用于定义    只有一个属性name 
+<{call}>      用于引用   直接写函数名也也可以引用
+想要传参数，直接在引用时候传参数，然后再函数中使用这些参数。也可以使用局部变量或者全局变量
+
+在模板中遍历数组
+foreach和section都是遍历数组
+foreach在模板中自动会保存到保存变量中
+smarty2中foreach的用法，在smarty3中也可以使用，向下兼容。
+见手册  name属性  会自动保存到保留变量中，使用这个循环的相关参数，在保留变量的$smarty.foreach.名字.哪个iteration 
+first last show total  这几个中的一个。
+
+smarty3中foreach
+eg:
+<{foreach $arr as $key => $value}>
+          <{$value}><br>
+<{foreachelse}>
+   数组不存在或者数组为空
+<{/foreach}>
+访问属性用 @ 访问
+
+
+section
+<{section name="one" loop=$arr}>
+      输出下标<{$arr[one]}>这个是缩写，输出每一次的下标
+      值 $arr[0],$arr[$smarty.section.one]
+<{sectionelse}>
+<{/section}>
+
+
+5.模板继承
+模板中内置函数extends   
+两种方式：在模板文件中继承（建议使用这种）
+<{extends file="parent.tpl"}>
+<{extends "parent.tpl"}>
+在php程序中继承
+$smarty->display("extends:parent.tpl|child.tpl");
+block函数：修改两个模板种不同的东西
+在模板的前面加，后面加，把父模板的东西加到子模板，用保留变量$smarty.block.parent,把子模板的东西加到父模板，用保留变量$smarty.block.child.
+
+
+6.页面静态化加分页
+注意要点:保存的目录
+刷新时间
+
+<?php
+$file="./cache/newindex_{$_GET['page']}.html";
+$cachetime = 10;
+if(!file_exists($file) || filemtime($file) + $cachetime < time()) {
+ob_start();
+        header("Content-Type:text/html;charset=utf-8");
+	include "init.inc.php";
+	include "page.class.php";
+        $smarty -> assign("arr", array("os", "Linux", "webserver", "Apache", "db","MySQL", "language","PHP"));
+        $pdo = new  PDO("mysql:host=localhost;dbname=xsphp", "root", "123456");
+        $page = new Page(40, 5);
+        $sql = "select id, name, age, sex, email from users {$page->limit}";
+        echo $sql;
+        $stmt = $pdo->prepare($sql);
+	$stmt -> execute();	
+	$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	//print_r($users);
+	$smarty -> assign("users", $users);
+	$smarty -> assign("fpage", $page->fpage());
+	$smarty -> display("index.tpl");
+        $content = ob_get_contents();
+	file_put_contents($file, $content);
+	ob_flush();
+        echo "##################<br>";
+        }else{
+		include $file;
+	}
+smarty自带页面静态化以及缓存
+在配置文件中写
+        //缓存时间
+	$smarty->cache_lifetime = 10;
+	//缓存的位置
+	$smarty->setCacheDir(ROOT."/cache/");
+	//开启缓存的功能
+	$smarty -> caching = true;
+使用的时候使用iscache("模板")来判断模板是否被缓存，被缓存则不执行sql。
+建议给模板加的参数是$_SERVER的REQUEST_URI的参数。
+
+有一些不需要缓存的加一个<{nocache}>内置函数（局部缓存）
+清除缓存：在php文件中清除缓存。
+
+		

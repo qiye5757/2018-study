@@ -1,0 +1,79 @@
+1.PDO分3个类:PDO处理类  预处理类  异常类
+2.声明必须try catch     dsn 
+构造方法中第四个函数，链接有关的属性的设置
+2.getAttribute()  获取常量的方法
+setAttribute()    修改常量的值
+
+echo "\nPDO是否关闭自动提交功能：". $pdo->getAttribute(PDO::ATTR_AUTOCOMMIT);
+echo "\n当前PDO的错误处理的模式：". $pdo->getAttribute(PDO::ATTR_ERRMODE); 
+echo "\n表字段字符的大小写转换： ". $pdo->getAttribute(PDO::ATTR_CASE); 
+echo "\n与连接状态相关特有信息： ". $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS); 
+echo "\n空字符串转换为SQL的null：". $pdo->getAttribute(PDO::ATTR_ORACLE_NULLS); 
+echo "\n应用程序提前获取数据大小：".$pdo->getAttribute(PDO::ATTR_PERSISTENT); 
+echo "\n与数据库特有的服务器信息：".$pdo->getAttribute(PDO::ATTR_SERVER_INFO); 
+echo "\n数据库服务器版本号信息：". $pdo->getAttribute(PDO::ATTR_SERVER_VERSION);
+echo "\n数据库客户端版本号信息：". $pdo->getAttribute(PDO::ATTR_CLIENT_VERSION); 
+
+
+
+3.PDO的错误处理模式
+pdo->exec(""):处理一个sql语句
+pdo::errorCode:获取错误的代码信息
+pdo::errorinfo:获取错误信息
+默认的错误模式（不提示，我们看不到问题，容易忽视）
+ATTR_ERRMODE：错误模式
+三种：0 默认模式
+1.警告模式  @屏蔽错误信息
+2.异常模式：开发常用
+
+4.PDO执行SQL语句
+PDO::query     用来处理结果集的语句   返回一个对象PDOstatement，具有数组映射，可以用foreach遍历。每一行数组，索引和关联并存。
+PDO::exec      用来处理非结果集的语句,返回影响行数
+PDO::prepare
+PDO::lastInsertId — 返回最后插入行的ID或序列值 
+
+
+5.PDO事务处理
+必须是InnoDB引擎
+把自动提交关闭
+开启事务
+rollback 回滚
+
+在php中：
+关闭自动提交：$pdo->setAttribute(PDO::ATTR_AUTOCOMMIT，0);
+开启事务：PDO ->beginTransaction();
+提交事务：PDO —>commit();
+try catch finally  finally中的return会覆盖try中的return
+运行完成以后开启自动提交：
+
+
+6.PDO对预处理语句的支持(可以做到)  数据库自带的(预处理功能)
+效率要提高，安全性要好。
+自动防止sql注入，已经在数据库中编译好的。
+
+
+7.使用PDO准备语句并执行。
+  PDO->prepare    将sql语句放到数据库并编译好，返回一个PDOstatement对象。   ？  或者   :name   前一种是索引数组，后一种是关联数组
+  执行：  $stmt -> execute()，可以直接往里面放一个数组
+  绑定参数:   $stmt ->bindParam()   参数一:prepare中的？或者:name
+  变成1或者  name  
+
+
+8.PDO预处理查询
+fetch()方法：参数常量
+fetchAll()方法:
+可以设置结果的模式:setFetchMode()
+
+bindColumn:把数据库的属性名绑定成变量
+rowCount:获取总行数或者影响的行数
+columnCount：获取列的个数
+如何获取最后一个自动增长的ID
+pdo->lastInsertId
+
+
+9.PDO处理大数据
+bindparam(2,$fp,PDO::PARAM_LOB);  将文件直接插入数据库中
+header("Content-type:插入数据库的数据");
+
+
+
