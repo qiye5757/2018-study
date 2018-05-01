@@ -44,13 +44,24 @@ foreach($dir_list as $key => $value){
               height: 100%;
               border-right: 2px solid #ccc;
               overflow: auto;
-           }
+			 }
            #con{float: right;
                 height:100%;
                 width: 85%;
                 overflow: auto;
 				padding: 30px;
-          }
+			 }
+			.fixed-btn{		  
+				position: fixed;
+				right: 1%;
+				bottom: 5%;
+				width: 40px;
+				border: 1px solid #eee;
+				background-color: white;
+				font-size: 24px;
+				z-index: 1040;
+				text-align: center;
+			}
         </style>
     </head>
     <body>
@@ -67,7 +78,12 @@ foreach($dir_list as $key => $value){
         <?php endforeach; ?>
       </ul>
     </div>
-    <div id="con"></div>
+    <div id="con">
+		<div id="content"></div>
+		<div class="fixed-btn">	
+			<span class="glyphicon glyphicon-arrow-up"></span>
+		</div>
+	</div>
     <script>
       $('.file').click(function(){
         var file_name = $(this).attr('file_name');
@@ -80,10 +96,28 @@ foreach($dir_list as $key => $value){
           },
           success:function(result){
             // alert(JSON.stringify(result));
-						$('#con').html(JSON.parse(result));
+						$('#con>#content').html(JSON.parse(result));
           }
         });
       })
+
+	    $(document).ready(function(){
+		 $('#con').scroll(function () {
+				if ($(this).scrollTop() > 50) {
+					$('.fixed-btn').fadeIn();
+				} else {
+					$('.fixed-btn').fadeOut();
+				}
+			});
+			// scroll body to 0px on click
+			$('.fixed-btn').click(function () {
+				$('.fixed-btn').fadeOut();
+				$('#con').animate({
+					scrollTop: 0
+				}, 800);
+				return false;
+			});
+	});
     </script>
 </body>
 </html>
