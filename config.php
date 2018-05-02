@@ -6,5 +6,6 @@ return [
    'linux',
    'markdown',
    'php-manual-read',
-   'php'
+   'php',
+   'others',
 ];
