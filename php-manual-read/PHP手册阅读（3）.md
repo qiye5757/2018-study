@@ -5,6 +5,11 @@
 3. [integer整型](#int)
 4. [float类型](#float)
 5. [string字符串](#string)
+6. [Array数组](#array)
+7. [Object对象](#object)
+8. [null空类型](#null)
+9. [Callback / Callable 类型](#callable)
+10. [类型转换的判别](#change-type)
 
 ### <span id = "introduction">简介</span>
 
@@ -62,7 +67,7 @@
 4. **PHP不支持无符号的整型**
 5. int整型相关的常量
 
-	+ PHP\_INT\_SIZE：获取常量的字长。4为32位，8位64位
+	+ PHP\_INT\_SIZE：获取常量的字长。4为32位，8为64位
 	+ PHP\_INT\_MAX：从5.0.5版本起，可以获取整型的最大值
 	+ PHP\_INT\_MIX：从7.0.0版本起，可以获取整型的最小值
 
@@ -236,7 +241,7 @@
 1. 自 5.4 起可以使用短数组定义语法，用 [] 替代 array()。
 2. key 可以是 integer 或者 string。value 可以是任意类型。
 
-	强制转换
+	键值强制转换
 
 	+ **包含有合法整型值的字符串会被转换为整型。**例如键名 "8" 实际会被储存为 8。但是 "08" 则不会强制转换，因为其不是一个合法的十进制数值。
 	+ **浮点数也会被转换为整型**，意味着其小数部分会被舍去。例如键名 8.7 实际会被储存为 8。
@@ -244,7 +249,7 @@
 	+ Null 会被转换为空字符串，即键名 null 实际会被储存为 ""。
 	+ 数组和对象不能被用为键名。坚持这么做会导致警告：Illegal offset type。
 
-3. 每一个新单元都会覆盖前一个的值
+3. **每一个新单元都会覆盖前一个的值**
 4. key 为可选项。如果未指定，PHP 将自动使用**之前**（删除也算）用过的最大 integer 键名加上 1 作为新的键名。（从0开始）
 
 ##### 其他
@@ -255,6 +260,130 @@
 
 2. 自 PHP 5.4 起可以用直接对函数或方法调用的结果进行数组解引用，在此之前只能通过一个临时变量。(**即不需要临时变量**)
 
-3. 自 PHP 5.5 起可以直接对一个数组原型进行数组解引用。(这个还是不太懂)
-4. 用方括号的语法新建／修改
+3. 自 PHP 5.5 起可以直接对一个数组原型进行数组解引用。(即使用 new stdclass()形式)
+4. 用方括号的语法新建／修改。即如果存在变量对其修改，不存在对其新增。
 5. 不给索引加上引号是合法的因此 "$foo[bar]" 是合法的，但是不建议使用
+6. 装换为数组
+
+	+ 对于任意 integer，float，string，boolean 和 resource 类型，如果将一个值转换为数组，将得到一个仅有一个元素的数组，其下标为 0，该元素即为此标量的值。
+	+ 如果一个 object 类型转换为 array，则结果为一个数组，其单元为该对象的属性。键名将为成员变量名，不过有几点例外：整数属性不可访问；私有变量前会加上类名作前缀；保护变量前会加上一个 '*' 做前缀。这些前缀的前后都各有一个 NULL 字符
+	+ 将 NULL 转换为 array 会得到一个空的数组。
+
+##### 实例
+
+1. 在循环中改变单元
+
+		<?php
+		// PHP 5
+		foreach ($colors as &$color) {
+		    $color = strtoupper($color);
+		}
+		unset($color); /* ensure that following writes to
+		$color will not modify the last array element */
+		
+		// Workaround for older versions
+		foreach ($colors as $key => $color) {
+		    $colors[$key] = strtoupper($color);
+		}
+		
+		print_r($colors);
+		?>
+
+2. 数组(Array) 的赋值总是会涉及到值的拷贝。使用引用运算符通过引用来拷贝数组。
+
+		<?php
+		$arr1 = array(2, 3);
+		$arr2 = $arr1;
+		$arr2[] = 4; // $arr2 is changed,
+		             // $arr1 is still array(2, 3)
+		             
+		$arr3 = &$arr1;
+		$arr3[] = 4; // now $arr1 and $arr3 are the same
+		?>
+
+### <span id="object">Object对象</span>
+
++ 对象初始化 
+
+	 要创建一个新的对象 object，使用 new 语句实例化一个类：
+	
+		<?php
+		class foo
+		{
+		    function do_foo()
+		    {
+		        echo "Doing foo."; 
+		    }
+		}
+		
+		$bar = new foo;
+		$bar->do_foo();
+		?>
+
+	 如果将一个对象转换成对象，它将不会有任何变化。如果其它任何类型的值被转换成对象，将会创建一个内置类 stdClass 的实例。如果该值为 NULL，则新的实例为空。 ***array 转换成 object 将使键名成为属性名并具有相对应的值，除了数字键，***不迭代就无法被访问。[阅读stdclass详解](http://www.phppan.com/2011/05/php-stdclass/#comments),即**stdClass类是PHP的一个内部保留类，初始时没有成员变量也没成员方法，所有的魔术方法都被设置为NULL，可以使用其传递变量参数，但是没有可以调用的方法。stdClass类可以被继承，只是这样做没有什么意义。**
+	
+		<?php
+		$obj = (object) array('1' => 'foo');
+		var_dump(isset($obj->{'1'})); // outputs 'bool(false)'
+		var_dump(key($obj)); // outputs 'int(1)'
+		?>
+	 ***对于其他值，会包含进成员变量名 scalar***。
+	
+		<?php
+		$obj = (object) 'ciao';
+		echo $obj->scalar;  // outputs 'ciao'
+		?>
+
+### <span id="resource">Resource 资源类型 </span>
+
+ 资源是一种特殊变量，保存了到外部资源的一个引用。资源是通过专门的函数来建立和使用的。可以使用get_resource_type() 函数来获取资源的类型
+
++ 转换为资源（没有意义）
++ 释放资源
+
+	引用计数系统是 Zend 引擎的一部分，可以自动检测到一个资源不再被引用了（和 Java 一样）。这种情况下此资源使用的所有外部资源都会被垃圾回收系统释放。因此，很少需要手工释放内存。
+
+	**Note: 持久数据库连接比较特殊，它们不会被垃圾回收系统销毁**
+
+### <span id="null">NULL</span>
+ 特殊的 NULL 值表示一个变量没有值。NULL 类型唯一可能的值就是 NULL。
+
++ 在下列情况下一个变量被认为是 NULL：
+
+	 + 被赋值为 NULL。
+	
+	 + 尚未被赋值。
+	
+	 + 被 unset()。
+
++ 语法 
+
+	 NULL 类型只有一个值，就是不区分大小写的常量 NULL。
+	
+		<?php
+		$var = NULL;       
+		?>
+		参见 is_null() 和 unset()。
+
++ 转换到 NULL 
+
+ 	使用 (unset) $var 将一个变量转换为 null 将不会删除该变量或 unset 其值。仅是返回 NULL 值而已。
+
+### <span id="callable">Callback / Callable 类型 </span>
+
+ 自 PHP 5.4 起可用 callable 类型指定回调类型 callback。一些函数如 call_user_func() 或 usort() 可以接受用户自定义的回调函数作为参数。回调函数不止可以是简单函数，还可以是对象的方法，包括静态类方法。
+
+1. 传递方法
+
+	+ PHP是将函数以string形式传递的。 可以使用任何内置或用户自定义函数，但除了语言结构例如：array()，echo，empty()，eval()，exit()，isset()，list()，print 或 unset()。
+	+ 一个已实例化的 object 的方法被作为 array 传递，下标 0 包含该 object，下标 1 包含方法名。 在同一个类里可以访问 protected 和 private 方法。
+	+ 静态类方法也可不经实例化该类的对象而传递，只要在下标 0 中包含类名而不是对象。自 PHP 5.2.3 起，也可以传递 'ClassName::methodName'。
+	+ 使用匿名函数
+	+ `注意`：在函数中注册有多个回调内容时(如使用 call_user_func() 与 call_user_func_array())，如在前一个回调中有未捕获的异常，其后的将不再被调用。
+
+### <span id = "change-type">类型转换的判别</span>
+
+ PHP 在变量定义中不需要（或不支持）明确的类型定义；变量类型是根据使用该变量的上下文所决定的。
+
++ (binary) 转换和 b 前缀转换支持为 PHP 5.2.1 新增。
++ 可以将变量放置在双引号中的方式来代替将变量转换成字符串：
