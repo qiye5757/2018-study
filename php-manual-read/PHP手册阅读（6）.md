@@ -147,7 +147,7 @@ array_merge()和+号的区别在于
 + 也可以使用对象或者字符串
 + 如果被检测的变量不是对象，instanceof 并不发出任何错误信息而是返回 FALSE
 + 如果要检查的类名称不存在，instanceof 会调用 __autoload()。另外，如果该类没有被装载则会产生一个致命错误
-+ instanceof 运算符是 PHP 5 引进的。在此之前用 is_a()，但是后来 is_a() 被废弃而用 instanceof 替代了。注意自 PHP 5.3.0 起，又恢复使用 is_a() 了。 
++ instanceof 运算符是 PHP 5 引进的。在此之前用 is\_a()，但是后来 is\_a() 被废弃而用 instanceof 替代了。注意自 PHP 5.3.0 起，又恢复使用 is\_a() 了。 
  
 
 
