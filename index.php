@@ -62,6 +62,9 @@ foreach($dir_list as $key => $value){
 				z-index: 1040;
 				text-align: center;
 			}
+			#content ul,ol{
+				margin-left: 30px;
+			}
         </style>
     </head>
     <body>
