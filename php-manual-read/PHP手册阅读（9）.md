@@ -1,0 +1,182 @@
+## PHP手册阅读（九）之类与对象
+
+1. [简介](#intro)
+
+
+### <span id="intro">简介</span>
+
++ PHP 对待对象的方式与引用和句柄相同，即每个变量都持有对象的引用，而不是整个对象的拷贝。
++ $this 是一个到主叫对象的引用（通常是该方法所从属的对象，**但如果是从第二个对象静态调用时也可能是另一个对象**）。
+
+		
+		<?php
+		class A
+		{
+		    function foo()
+		    {
+		        if (isset($this)) {
+		            echo '$this is defined (';
+		            echo get_class($this);
+		            echo ")\n";
+		        } else {
+		            echo "\$this is not defined.\n";
+		        }
+		    }
+		}
+		
+		class B
+		{
+		    function bar()
+		    {
+		        // Note: the next line will issue a warning if E_STRICT is enabled.
+		        A::foo();
+		    }
+		}
+		
+		$a = new A();
+		$a->foo();
+		
+		// Note: the next line will issue a warning if E_STRICT is enabled.
+		A::foo();
+		$b = new B();
+		$b->bar();
+		
+		// Note: the next line will issue a warning if E_STRICT is enabled.
+		B::bar();
+		?>  
+		
+		
+		以上例程会输出：
+		
+		
+		$this is defined (A)
+		$this is not defined.
+		$this is defined (B)
+		$this is not defined.
+ 
++ new 使用
+
+	+ 如果在 new 之后跟着的是一个包含有类名的字符串，则该类的一个实例被创建。
+
+			$a = new a;
+			$a = new a();
+	+ **在类定义内部，可以用 new self 和 new parent 创建新对象**。 
+	+ **把一个对象已经创建的实例赋给一个新变量时，新变量会访问同一个实例，就和用该对象赋值一样。此行为和给函数传递入实例时一样。**。
+	+ **可以用克隆给一个已创建的对象建立一个新实例**。 
+	+ PHP5.3新增 new static 
+	+ PHP5.4引用了使用单个表达式来访问对象的属性和方法
+
+
++ 实例化对象的集中办法的区别
+
+	+ new self  就是这个类，是代码段里面的这个类。
+	+ new static 访问的是当前实例化的那个类
+	+ new parent 访问的是继承的上级的对象
+
+			<?php
+	
+			class test{
+				public $name1 = 1;
+				public function aa(){
+					return new self;
+				}
+			
+				public function bb(){
+					return new static;
+				}
+			
+				public function cc(){
+					return new parent;
+				}
+			}
+			
+			
+			class test2 extends test{
+				public $name1 = 2;
+			
+				public function cc(){
+					return new parent;
+				}
+			}
+			
+			
+			$test1 = new test;
+			echo $test1->name1;    //1
+			
+			$test2 = $test1->aa();
+			echo $test2->name1;    //1 
+			
+			$test3 = $test1->bb();
+			echo $test3->name1;    //1
+			
+			$test3 = $test1->cc();
+			echo $test3->name1;   //error
+			
+			
+			$test1 = new test2;
+			echo $test1->name1;   //2
+			
+			$test2 = $test1->aa();
+			echo $test2->name1;   //1
+			
+			$test3 = $test1->bb();
+			echo $test3->name1;   //2 
+			
+			$test3 = $test1->cc();
+			echo $test3->name1;   //1
+
++ 一个类中的属性和方法命名可以一样，使用哪个看使用的时候是否加括号.
+		<?php
+
+		class test{
+			public $name1 = 1;
+		
+			public function name1(){
+				return 222;
+			}
+		}
+		
+		$test1 = new test;
+		
+		echo $test1->name1;  //1
+		echo $test1->name1();   //222
++ 这一意味着不能使用使用匿名函数给类的属性赋值。但是可以先将属性赋值给一个变量，来访问该匿名函数
+
+		<?php
+		class Foo
+		{
+		    public $bar;
+		    
+		    public function __construct() {
+		        $this->bar = function() {
+		            return 42;
+		        };
+		    }
+		
+			public function bar(){
+				return 222;
+			}
+		}
+		
+		$obj = new Foo();
+		
+		// as of PHP 5.3.0:
+		$func = $obj->bar;
+		echo $func(), PHP_EOL;
+		
+		// alternatively, as of PHP 7.0.0:
+		echo ($obj->bar)(), PHP_EOL;
++ extends使用
+
+	+ 一个类可以在声明中用 extends 关键字继承另一个类的方法和属性。PHP不支持多重继承，一个类只能继承一个基类。 
+	+ 被继承的方法和属性可以通过用同样的名字重新声明被覆盖。
+	+ 但是如果父类定义方法时使用了 final，则该方法不可被覆盖。
+	+ 可以通过 parent:: 来访问被覆盖的方法或属性。 
+	+ **当覆盖方法时，参数必须保持一致否则 PHP 将发出 E_STRICT 级别的错误信息。但构造函数例外，构造函数可在被覆盖时使用不同的参数**。
+
++ ::class使用
+
+	+ 自 PHP 5.5 起，关键词 class 也可用于类名的解析。使用 ClassName::class 你可以获取一个字符串，包含了类 ClassName 的完全限定名称。这对使用了 命名空间 的类尤其有用。
+	+ 类名的解析是在加载的时候就开始了，这意味着即使类没加载进来使用也不报错。
+
+

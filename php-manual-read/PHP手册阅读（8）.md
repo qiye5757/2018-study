@@ -4,6 +4,7 @@
 2. [函数的参数](#argument)
 3. [返回值](#return)
 4. [可变函数](#changefunction)
+5. [匿名函数](#anonymous)
 ### <span id="myfunction">用户自定义函数</span>
 
 + 任何有效的 PHP 代码都有可能出现在函数内部，**甚至包括其它函数和类定义**。
@@ -185,7 +186,7 @@
 + is_callable():检测参数是否为合法的可调用结构 
 + call\_user\_func(): 把第一个参数作为回调函数调用
 
-### 匿名函数
+### <span id="anonymous">匿名函数</span>
 
 匿名函数（Anonymous functions），也叫闭包函数（closures），允许 临时创建一个没有指定名称的函数。
 
