@@ -2,6 +2,7 @@
 
 return [
    'composer',
+   'docker',
    'git-study',
    'linux',
    'markdown',

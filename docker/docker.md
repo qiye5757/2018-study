@@ -27,6 +27,10 @@ Docker Hub(https://hub.docker.com) 提供了庞大的镜像集合供使用。
 
 	> docker在window上是先安装了一个linux虚拟机，docker在linux运行，使用docker-machine ip default获取linux的ip地址
 
+4. docker login 报错 "Get https://registry-1.docker.io/v2/"
+
+	> 设置虚拟机的DNS为"8.8.8.8"
+
 ### docker镜像使用
 
 1. 获取镜像 
