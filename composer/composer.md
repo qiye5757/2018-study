@@ -46,3 +46,11 @@
 	+ composer.json:定义项目所需要的依赖
 	+ composer.lock:锁定当前依赖的版本号
 	+ 可以使用 `composer update`命令强制更新composer.lock文件为composer.json定义的最新的依赖的版本，不过一般不推荐这么做，可以在该命令后指定需要更新的依赖
+
+### 资源包
+
++ 资源包:每个项目都是一个包，每次定义 `require` 实际上是引入其他的资源包
++ 平台软件包:Composer 将那些已经安装在系统上，但并不是由 Composer 安装的包视为一个虚拟的平台软件包
+
+### composer命令
+
