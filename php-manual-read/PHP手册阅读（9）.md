@@ -68,7 +68,7 @@
 	+ PHP5.4引用了使用单个表达式来访问对象的属性和方法
 
 
-+ 实例化对象的集中办法的区别
++ 实例化对象的几种办法的区别
 
 	+ new self  就是这个类，是代码段里面的这个类。
 	+ new static 访问的是当前实例化的那个类
@@ -233,7 +233,107 @@
 + 类可以实现多个接口，用逗号来分隔多个接口的名称。 
 + 实现多个接口时，接口中的方法不能有重名
 + 接口也可以继承，通过使用 extends 操作符
-+ **接口中也可以定义常量，但是不能被覆盖**
++ **接口中也可以定义常量，但是不能被覆盖。即同一个类中的常量**
+
+### Trait
+
++ Trait 是为类似 PHP 的单继承语言而准备的一种代码复用机制。
++ Trait 相当于横向扩展代码
++ 使用方法
+
+		//定义trait
+		Trait aa{
+			
+		}
+
+		class test{
+			use aa;
+		}
+
++ 优先级：优先顺序是来自当前类的成员覆盖了 trait 的方法，而 trait 则覆盖了被继承的方法
++ 使用多个Trait 
+
+	> use aa,bb,cc;
+
+##### 特性
+
++ 支持定义抽象方法
++ 可以定义静态类静态方法
++ 可以定义属性：Trait 定义了一个属性后，类就不能定义同样名称的属性，否则会产生 fatal error。 有种情况例外：属性是兼容的（同样的访问可见度、初始默认值）。
+
+##### 冲突性的解决
+
++ 如果两个 trait 都插入了一个同名的方法，如果没有明确解决冲突将会产生一个致命错误。 
++ 使用 `insteadof` 和 `as` 解决冲突
+
+
+		<?php 
+
+			trait A {
+			    public function smallTalk() {
+			        echo 'a';
+			    }
+			    public function bigTalk() {
+			        echo 'A';
+			    }
+			}
+			
+			trait B {
+			    public function smallTalk() {
+			        echo 'b';
+			    }
+			    public function bigTalk() {
+			        echo 'B';
+			    }
+			}
+			
+			class Talker {
+			    use A, B {
+			        B::smallTalk insteadof A;
+			        A::bigTalk insteadof B;
+			    }
+			}
+			
+			class Aliased_Talker {
+			    use A, B {
+			        B::smallTalk insteadof A;
+			        A::bigTalk insteadof B;
+			        B::bigTalk as talk;
+			    }
+			}
+
+
++ 使用 as 语法还可以用来调整方法的访问控制。 
+
+	>  use HelloWorld { sayHello as private myPrivateHello; }
+	>  use HelloWorld { sayHello as protected; }
+
++ trait可以使用trait，就像class使用trait一样
+	
+		<?php
+
+			trait test1{
+			   public $aa = "111";
+			
+			   public function test11(){
+			       echo 222;
+			   }
+			}
+			
+			trait test2{
+			  use test1{
+			     test1::test11 as public test1;
+			  }
+			}
+			
+			class test3{
+			  use test2;
+			}
+			
+			$test = new test3;
+			$test->test1();
+			echo $test->aa;
+
 
 
 
