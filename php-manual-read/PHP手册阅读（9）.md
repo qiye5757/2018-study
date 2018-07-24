@@ -235,7 +235,7 @@
 + 接口也可以继承，通过使用 extends 操作符
 + **接口中也可以定义常量，但是不能被覆盖。即同一个类中的常量**
 
-### Trait
+### Trait（PHP5.4以后支持）
 
 + Trait 是为类似 PHP 的单继承语言而准备的一种代码复用机制。
 + Trait 相当于横向扩展代码
@@ -334,9 +334,67 @@
 			$test->test1();
 			echo $test->aa;
 
+### 匿名类（PHP7开始支持）
 
+	<?php
+		$util->setLogger(new class {
+		    public function log($msg)
+		    {
+		        echo $msg;
+		    }
+		}); 
 
++ 可以传递参数到匿名类的构造器，也可以扩展（extend）其他类、实现接口（implement interface），以及像其他普通的类一样使用 trait。
++ 匿名类被嵌套进普通 Class 后，不能访问这个外部类（Outer class）的 private（私有）、protected（受保护）方法或者属性。 为了访问外部类（Outer class）protected 属性或方法，匿名类可以 extend（扩展）此外部类。 为了使用外部类（Outer class）的 private 属性，必须通过构造器传进来
++ 声明的同一个匿名类，所创建的对象都是这个类的实例。
++ **注意，匿名类的名称是通过引擎赋予的，如下例所示。 由于实现的细节，不应该去依赖这个类名。**
 
+### 重载
 
+ 在Java中的重载就是函数或者方法有相同的名称，但是参数列表不相同的情形，这样的同名不同参数的函数或者方法之间，互相称之为重载函数或者方法，这也牵涉到了多态。  
 
+ PHP所提供的“重载”（overloading）是指动态地“创建”类属性和方法。我们是通过魔术方法（magic methods）来实现的。
 
++ 对属性的重载 `__set()`、 `__get()`、 `__isset()`、 `__unset()`
++ 对方法的重载 `__call()`、 `__callStatic()`
+
+### PHP魔术方法
+
+1. __construct():类的构造方法
+
+	如果 PHP 5 在类中找不到 __construct() 函数并且也没有从父类继承一个的话，它就会尝试寻找旧式的构造函数，也就是和类同名的函数。因此唯一会产生兼容性问题的情况是：类中已有一个名为 __construct() 的方法却被用于其它用途时。 
+
+	+ 自 PHP 5.3.3 起，在命名空间中，与类名同名的方法不再作为构造函数
+	
+
+2. __destory():类的析构方法
+
+	+ 注意：析构函数不能带有任何参数。
+	+ 析构函数即使在使用 exit() 终止脚本运行时也会被调用。
+	+ 在析构函数中调用 exit() 将会中止其余关闭操作的运行。 
+
+3. __call():在对象中调用一个不可访问方法时调用。
+
+	> function __call(string $function_name, array $arguments)
+
+4. __callStatic():用静态方式中调用一个不可访问方法时调用。
+
+	> public function __call($name, $arguments) 
+
+5. __set()：在给不可访问属性赋值时，会被调用。**对象中有用** 
+	
+	> public void __set ( string $name , mixed $value )
+
+6. __get()：读取不可访问属性的值时，会被调用。 **对象中有用** 
+
+	> public mixed __get ( string $name )
+	
+7. __isset()：当对不可访问属性调用 isset() 或 empty() 时， 会被调用。**对象中有用** 
+
+	> public bool __isset ( string $name ) 
+
+8. __unset()：当对不可访问属性调用 unset() 时， 会被调用。 **对象中有用** 
+
+	> public void __unset ( string $name )
+
+9. __sleep():当类序列化的时候会首先调用。此功能可以用于清理对象，并返回一个包含对象中所有应被序列化的变量名称的数组。
