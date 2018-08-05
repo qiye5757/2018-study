@@ -9,4 +9,5 @@ return [
    'php-manual-read',
    'php',
    'others',
+   'js',
 ];
