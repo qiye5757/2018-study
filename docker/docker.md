@@ -5,12 +5,12 @@ Docker 容器通过 Docker 镜像来创建。
 
 ### 基础概念
 
-+ Docker 镜像是用于创建 Docker 容器的模板。
-+ Docker 容器是独立运行的一个或一组应用。
++ Docker 镜像是用于创建 Docker 容器的模板，Docker镜像是分层存储的。
++ Docker 容器是独立运行的一个或一组应用，Docker容器是以Docker镜像为基础层、在其上创建一个当前容器的存储层，我们可以称这个为容器运行时读写而准备的存储层为**容器存储层** 。
 + Docker 客户端通过命令行或者其他工具使用 Docker API (https://docs.docker.com/reference/api/docker\_remote\_api) 与 Docker 的守护进程通信。
 + Docker 主机：一个物理或者虚拟的机器用于执行 Docker 守护进程和容器。
 + Docker Registry:一个Docker Registry包含多个仓库，一个仓库包含多个标签。每个标签代表一个镜像
-Docker Hub(https://hub.docker.com) 提供了庞大的镜像集合供使用。
+  Docker Hub(https://hub.docker.com) 提供了庞大的镜像集合供使用。
 + Docker Machine是一个简化Docker安装的命令行工具，通过一个简单的命令行即可在相应的平台上安装Docker，比如VirtualBox、 Digital Ocean、Microsoft Azure。
 
 ### docker安装错误解决
@@ -42,7 +42,7 @@ Docker Hub(https://hub.docker.com) 提供了庞大的镜像集合供使用。
 	> `docker image ls` 列出所有本地已存在的镜像。列表包含了仓库名、标签、镜像 ID、创建时间 以及 所占用的空间
 
     + docker镜像只有在本地的时候是解压缩状态，在仓库以及传输过程中使用的都是以压缩文件的形式存在。而且由于docker镜像是分层处理的，所以实际存储空间可能更小。  
-    
+   
 		> 可以使用 `docker system df` 获取镜像和容器在本地实际存储所占用的空间
 
 	+ 无标签镜像也被称为 虚悬镜像(dangling image) 

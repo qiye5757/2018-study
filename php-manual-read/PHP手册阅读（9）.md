@@ -399,8 +399,71 @@
 
 9. __sleep():当类序列化的时候会首先调用。此功能可以用于清理对象，并返回一个包含对象中所有应被序列化的变量名称的数组。
 
+10. __wakeup():当类反序列化的时候会调用。
+
+11. __toString():用于一个类被当成字符串时应怎样回应,此方法必须返回一个字符串。
+
+12. __invoke():当尝试以调用函数的方式调用一个对象时，__invoke() 方法会被自动调用。 
+
+13. __set\_state():调用var_export()导出类时，此静态方法会被调用。
+
+14. __clone():clone对象完成后调用，可以改一些值之类的。
+
+15. __debugInfo():打印所需调试信息
+
 ### Final 关键字 
 
 + PHP 5 新增了一个 final 关键字。如果父类中的方法被声明为 final，则子类无法覆盖该方法。如果一个类被声明为 final，则不能被继承。
 
 + PHP 5 新增了一个 final 关键字。如果父类中的方法被声明为 final，则子类无法覆盖该方法。如果一个类被声明为 final，则不能被继承。
+
+### 对象复制
+
+ 使用 `clone` 进行复制，当对象被复制后，PHP 5 会对对象的所有属性执行一个浅复制（shallow copy）。所有的引用属性 仍然会是一个指向原来的变量的引用。
+
++ PHP7.0.0新增可以在一个表达式中使用克隆对象的方法。
+
+		<?php
+			$dateTime = new DateTime();
+			echo (clone $dateTime)->format('Y');
+
+### 对象比较
+
+ 当使用比较运算符（==）比较两个对象变量时，比较的原则是：如果两个对象的属性和属性值 都相等，而且两个对象是同一个类的实例，那么这两个对象变量相等。 
+
+ 而如果使用全等运算符（===），这两个对象变量一定要指向某个类的同一个实例（即同一个对象）。 
+
+		<?php
+		class A {
+		    public static function foo() {
+		        static::who();
+		    }
+		
+		    public static function who() {
+		        echo __CLASS__."\n";
+		    }
+		}
+		
+		class B extends A {
+		    public static function test() {
+		        A::foo();
+		        parent::foo();
+		        self::foo();
+		    }
+		
+		    public static function who() {
+		        echo __CLASS__."\n";
+		    }
+		}
+		class C extends B {
+		    public static function who() {
+		        echo __CLASS__."\n";
+		    }
+		}
+		
+		C::test();
+		?> 
+
+### 后期静态绑定 
+
+ [PHP常见概念混淆（七）之self、static、parent的区别](https://www.cnblogs.com/qiye5757/p/9437971.html)
