@@ -467,3 +467,7 @@
 ### 后期静态绑定 
 
  [PHP常见概念混淆（七）之self、static、parent的区别](https://www.cnblogs.com/qiye5757/p/9437971.html)
+
+### PHP对象与引用
+
+ 在PHP中，变量作为一个结构体，当为对象变量的时候，结构体中的对象标识符会被赋值。
