@@ -1,8 +1,7 @@
-## PHP手册阅读（10）之命名空间
-
 1. [前言](#intro)
 2. [命名规则](#rule)
 3. [命名空间使用](#use)
+4. [解析规则](#how)
 
 ### <span id="intro">前言</span>
 
@@ -74,37 +73,37 @@
 
 6. 可以使用use导入或者引入`类`、`接口`、`命名空间`、 `函数（PHP5.6引入）`、`常量（PHP5.6引入）`， 使用 as 设置别名。
 
-	> 1. 导入的时候必须为完全限定名称，所以不需要加前面的那个 `\`
+	+ 导入的时候必须为完全限定名称，所以不需要加前面的那个 `\`
 
-	> 2. 导入不影响动态访问元素
+	+ 导入不影响动态访问元素
 
-	> 3. 使用的时候，导入操作只影响非限定名称和限定名称。完全限定名称由于是确定的，故不受导入的影响
+	+ 使用的时候，导入操作只影响非限定名称和限定名称。完全限定名称由于是确定的，故不受导入的影响
 
-	> 4. use定义必须在全局变量中定义或者跟着namespace一起定义，这是因为导入是在编译阶段完成的。
+	+ use定义必须在全局变量中定义或者跟着namespace一起定义，这是因为导入是在编译阶段完成的。
 
-	> 5. **导入操作只影响非限定名称和限定名称。完全限定名称由于是确定的，故不受导入的影响**
+	+ **导入操作只影响非限定名称和限定名称。完全限定名称由于是确定的，故不受导入的影响**
 
-	> 6. 从PHP 7.0开始，从同一个名称空间导入的类、函数和常量可以在单个use语句中组合在一起。
+	+ 从PHP 7.0开始，从同一个名称空间导入的类、函数和常量可以在单个use语句中组合在一起。
 
-		<?php
-
-		// Pre PHP 7 code
-		use some\namespace\ClassA;
-		use some\namespace\ClassB;
-		use some\namespace\ClassC as C;
-		
-		use function some\namespace\fn_a;
-		use function some\namespace\fn_b;
-		use function some\namespace\fn_c;
-		
-		use const some\namespace\ConstA;
-		use const some\namespace\ConstB;
-		use const some\namespace\ConstC;
-		
-		// PHP 7+ code
-		use some\namespace\{ClassA, ClassB, ClassC as C};
-		use function some\namespace\{fn_a, fn_b, fn_c};
-		use const some\namespace\{ConstA, ConstB, ConstC}; 
+			<?php
+	
+			// Pre PHP 7 code
+			use some\namespace\ClassA;
+			use some\namespace\ClassB;
+			use some\namespace\ClassC as C;
+			
+			use function some\namespace\fn_a;
+			use function some\namespace\fn_b;
+			use function some\namespace\fn_c;
+			
+			use const some\namespace\ConstA;
+			use const some\namespace\ConstB;
+			use const some\namespace\ConstC;
+			
+			// PHP 7+ code
+			use some\namespace\{ClassA, ClassB, ClassC as C};
+			use function some\namespace\{fn_a, fn_b, fn_c};
+			use const some\namespace\{ConstA, ConstB, ConstC}; 
 
 ### <span id="rule">命名空间使用</span>
 
@@ -140,17 +139,21 @@
 
 3. **对于类名称来说，类名称总是解析到当前命名空间中的名称。因此在访问系统内部或不包含在命名空间中的类名称时，必须使用完全限定名称.**
 
-### 解析规则
+### <span id="how">解析规则</span>
 
-首先先理解四个概念
+首先先理解四个概念：
 
-1. 非限定名称Unqualified name，如 test()
-2. 限定名称Qualified name， 如 test\test()
-3. 完全限定名称Fully qualified name, 如 \test\test()
-4. 相对限定名称 Relative name，如 namespace\test\test()
+1. 非限定名称 `Unqualified name`，如 `test()`
+2. 限定名称 `Qualified name`, 如 `test\test()`
+3. 完全限定名称 `Fully qualified name`, 如 `\test\test()`
+4. 相对限定名称 `Relative name`，如 `namespace\test\test()`
 
 规则如下：
-1. 完全限定名称在还没导入命名空间之前解析，如 new \test\test() 会被解析为 test\test()
-		
-		
 
+1. 完全限定名称在还没导入命名空间之前解析，如 `new \test\test()` 会被解析为 `test\test()`
+2. 相对限定名称总是将 `namespace` 关键字替换为当前的命名空间，如 `new namespace\test()`在 `A\B`命名空间中会被解析为 `new A\B\test()`，而在`全局`命名空间中会被解析为 `new test()`
+3. 对所有的限定名称来说,根据当前的`namespace/class导入表`在编译时进行转换。
+4. 在命名空间内部，所有的没有根据`namespace/class导入表`转换的限定名称均会在其前面加上当前的命名空间名称。
+5. 对所有的非限定名称来说，各自名称是根据各自的导入表来解析的。即类名称是根据`namespace/class导入表`来解析的，常量是根据`常量导入表`来解析的，函数是根据 `函数导入表`来解析的
+6. 在命名空间内部，所有的没有根据`namespace/class导入表`转换的限定名称均会在其前面加上当前的命名空间名称。
+7. 在命名空间内部，对非限定名称的`类`和`常量`如果在当前命名空间中没有定义，却在全局命名空间中定义，则会在运行时解析。
