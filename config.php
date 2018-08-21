@@ -3,7 +3,7 @@
 return [
    'composer',
    'docker',
-   'git-study',
+   'git',
    'linux',
    'markdown',
    'php-manual-read',
