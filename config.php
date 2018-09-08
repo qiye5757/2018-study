@@ -1,13 +1,12 @@
 <?php
 
 return [
-   'composer',
-   'docker',
    'git',
    'linux',
    'markdown',
-   'php-manual-read',
-   'php',
    'others',
-   'js',
+   'php',
+   'phpabout',
+   'php-framework',
+   'php-manual-read'
 ];
