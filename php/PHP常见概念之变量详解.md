@@ -174,7 +174,32 @@ PHP中变量大致分为4种
 
  通过 HTTP POST 方式上传到当前脚本的文件的数组。
 
-##### 
+##### $_REQUEST(HTTP Request 变量)
+
+ 默认情况下包括了`$_GET`、`$_POST`、`$_COOKIE` 的数组。
+
++ php.ini中`request_order`指令，这个指令指定`$_REQUEST`全局数组包含的值。(G,P,C,E & S)分别为(GET,POST,COOKIE,ENV,SERVER)。且会从左往右将数据放进`$_REQUEST`全局数组中。
+
+	> request_order = "GP";  //意味着$_REQUEST数组中只包含着GET，和POST中的值，且POST值会覆盖GET的值。
+	
++ php.ini中的`variables_order`指令执行在一开始的时候那些外部变量会注册到PHP全局变量中。**如果赋值为空，则值为EGPCS**
+
+	>  variables_order = 'GPCS' //PHP会将GET、POST、COOKIE、SERVER注册为全局数组
+
++ import\_request\_variables — 将 GET/POST/Cookie 变量导入到全局作用域中
+
+##### $_COOKIE(已弃用$HTTP_COOKIE_VARS)
+
+ 通过 HTTP Cookies 方式传递给当前脚本的变量的数组。关于cookie可以参考以下两篇文章
+
++ [PHP常见技术（六）之cookie详解](https://www.cnblogs.com/qiye5757/p/9762911.html)
++ [cookie详解](https://segmentfault.com/a/1190000006156098)
+
+##### $_SESSION(已弃用$HTTP_SESSION_VARS)
+
+
+
+
 
 
 
