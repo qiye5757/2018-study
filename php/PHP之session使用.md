@@ -19,7 +19,7 @@
  分以下几个步骤
 
 1. 初始化session相关的全局变量
-2. 根据ini的`save_handler`配置来，确定使用哪种方式来存储与读取session数据。
+2. 根据ini的`save_handler`配置来，确定使用哪种方式来存储与读取session数据（即`会话保存管理器`）。
 3. session的序列化和反序列化选择，在前面[PHP常见概念（六）之序列化](https://www.cnblogs.com/qiye5757/p/9435722.html)提到过，选择哪种方式来对session数据读取时进行序列化处理。
 4. `save_handler`和`serializer` 如果有一个不成功，则无法向下进行
 5. 如果ini 中 `session.auto_start` 为1 自动`session_start` 
@@ -126,17 +126,41 @@
 + 销毁
 + 垃圾回收
 
-### 三、PHP中session相关的配置文件（按照最基础的files 处理器形式）
+##### 开启
 
-#### session.save_handler 
+调用session_start()函数，开启session，服务器会分配一个session_id并将session_id保存到cookie中。
 
- session.save_handler 定义了来存储和获取与会话关联的数据的处理器的名字。默认为 files。可以有别的值，但是必须是PHP官方已经写好的。如mm,redis，memcache等等。或者为user，即为系统自定义的函数。
+1. session_start()函数前面不能有任何输出，因为session_start会往cookie中添加数据
+2. PHP在ini中配置 session.auto_start 会自动开启session。
 
-#### session.save_path
+##### 设置/读取数据
 
- 
+ 通过$_SESSION来进行设置/读取数据
 
- 
+##### 关闭
+
+ PHP 脚本执行完毕之后，会话会自动关闭。 同时，也可以通过调用函数 session_write_close() 来手动关闭会话。
+
+##### 销毁
+
++ 通常情况下，在你的代码中不必调用 `session_destroy()` 函数， 可以直接清除 $_SESSION 数组中的数据来实现会话数据清理。 
+
+	> $_SESSION = array();
+
++ 调用session_destroy()函数可以清除跟这个用户相关的所有的数据，但是调用之前必须将cookie中保存的数据清除.
+
+		if (ini_get("session.use_cookies")) {
+	    $params = session_get_cookie_params();
+	    setcookie(session_name(), '', time() - 42000,
+	        $params["path"], $params["domain"],
+	        $params["secure"], $params["httponly"]
+		    );
+		}
+		
+		// 最后，销毁会话
+		session_destroy();
+
+### 三、详解PHP中的files会话保存管理器
 
 ### 常见问题
 
