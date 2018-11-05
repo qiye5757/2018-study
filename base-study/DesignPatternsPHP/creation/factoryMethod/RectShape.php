@@ -6,8 +6,8 @@
  * Time: 下午 4:44
  */
 require_once "shapeInterface.php";
-class rectShape implements shape{
+class RectShape implements shapeInterface{
     public function draw(){
-        echo "this is circle shape draw method";
+        echo "this is rect shape draw method\n";
     }
 }
