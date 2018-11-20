@@ -5,8 +5,8 @@
  * Date: 2018/11/3 0003
  * Time: 下午 4:44
  */
-require_once "shapeInterface.php";
-class TriangleShape implements shapeInterface{
+require_once "ShapeInterface.php";
+class TriangleShape implements ShapeInterface{
     public function draw(){
         echo "this is triangle shape draw method\n";
     }
