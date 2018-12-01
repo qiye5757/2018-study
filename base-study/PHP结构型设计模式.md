@@ -92,6 +92,157 @@
 适配器模式（Adapter）通常适用于以下场景。
 + 以前开发的系统存在满足新系统功能需求的类，但其接口同新系统的接口不一致。
 + 使用第三方提供的组件，但组件接口定义和自己要求的接口定义不同。
+
+## 2. 代理模式(Proxy)
+
+ 在有些情况下，一个客户不能或者不想直接访问另一个对象，这时需要找一个中介帮忙完成某项任务，这个中介就是代理对象。例如，购买火车票不一定要去火车站买，可以通过 12306 网站或者去火车票代售点买。又如找女朋友、找保姆、找工作等都可以通过找中介完成。
+ 
+### 为什么需要代理模式？
+
+ 在软件设计中，如果由于某些原因（如安全）不想访问真实对象的话，可以使用代理模式。
+ 
+### 什么是代理模式？
+
+代理模式主要分为以下几个角色：
+
++ 抽象主题（Subject）类：通过接口或抽象类声明真实主题和代理对象实现的业务方法。
++ 真实主题（Real Subject）类：实现了抽象主题中的具体业务，是代理对象所代表的真实对象，是最终要引用的对象。
++ 代理（Proxy）类：提供了与真实主题相同的接口，其内部含有对真实主题的引用，它可以访问、控制或扩展真实主题的功能。
+    
+### 实例
+
+#### 第一步：首先存在一个抽象主题接口
+
+    Interface Subject{
+        public function request();
+    }
+
+#### 第二步：存在一个真实主题
+
+    class RealSubject implements Subject{
+        public function request(){
+            echo "这个是真实主题\n";
+        }
+    }
+
+#### 第三步：使用一个代理模式
+
+    class Proxy implements Subject{
+        
+        public $realSubject;
+        
+        public function __construct(){
+            $this->realSubject = new RealSubject();    
+        }
+        
+        public function request(){
+            $this->preRequest();
+            $this->realSubject->request();
+            $this->postRequest();
+        }
+        
+        public function preRequest(){
+            echo "这是调用真实主题之前的\n";
+        }
+        
+        public function postRequest(){
+            echo "这是调用真实主题之后的\n";
+        }
+    }
+    
+    
+#### 第四步：测试
+
+    $testProxy = new Proxy();
+    $testProxy->request();d
+    
+### 模式的应用场景
+
++ 远程代理，这种方式通常是为了隐藏目标对象存在于不同地址空间的事实，方便客户端访问。例如，用户申请某些网盘空间时，会在用户的文件系统中建立一个虚拟的硬盘，用户访问虚拟硬盘时实际访问的是网盘空间。
++ 虚拟代理，这种方式通常用于要创建的目标对象开销很大时。例如，下载一幅很大的图像需要很长时间，因某种计算比较复杂而短时间无法完成，这时可以先用小比例的虚拟代理替换真实的对象，消除用户对服务器慢的感觉。
++ 安全代理，这种方式通常用于控制不同种类客户对真实对象的访问权限。
++ 智能指引，主要用于调用目标对象时，代理附加一些额外的处理功能。例如，增加计算真实对象的引用次数的功能，这样当该对象没有被引用时，就可以自动释放它。
++ 延迟加载，指为了提高系统的性能，延迟对目标的加载。例如，Hibernate 中就存在属性的延迟加载和关联表的延时加载。
+
+
+## 3. 桥梁模式（Bridge）
+
+ 引用[设计模式（八）桥梁模式（Bridge）](https://blog.csdn.net/xingjiarong/article/details/50132727)，这篇文章中的一个例子：
+ 
+ 现需要提供大中小3种型号的画笔，能够绘制5种不同颜色，如果使用蜡笔，我们需要准备3*5=15支蜡笔，也就是说必须准备15个具体的蜡笔类。而如果使用毛笔的话，只需要3种型号的毛笔，外加5个颜料盒，用3+5=8个类就可以实现15支蜡笔的功能。实际上，**蜡笔和毛笔的关键一个区别就在于笔和颜色是否能够分离**。
+ 
+### 为什么需要Bridge模式？
+
+ 一个类中有多个纬度的变化，那可以使用Bridge模式对该类进行解耦，即将多个纬度进行抽象。所以桥梁模式的用意是“将抽象化与实现化脱耦，使得二者可以独立地变化。” 
+ 
+### 什么是Bridge模式？
+
+桥接（Bridge）模式包含以下主要角色。
++ 抽象化（Abstraction）角色：定义抽象类，并包含一个对实现化对象的引用。
++ 扩展抽象化（Refined Abstraction）角色：是抽象化角色的子类，实现父类中的业务方法，并通过组合关系调用实现化角色中的业务方法。
++ 实现化（Implementor）角色：定义实现化角色的接口，供扩展抽象化角色调用。
++ 具体实现化（Concrete Implementor）角色：给出实现化角色接口的具体实现。
+
+### 实例
+
+ 可以实现一个包含颜色的形状接口。
+
+#### 第一步：定义一个颜色接口（Implementor角色）。定义一个形状抽象类（Abstraction角色），其中包含一个颜色接口的引用。
+
+    //定义颜色接口
+    Interface Color{
+        public function showColor();
+    }
+    
+    
+    //形状抽象类
+    abstract class Shape
+    {
+    
+        protected $color;
+    
+    
+        public function __construct(Color $color)
+        {
+            $this->color = $color;
+        }
+    
+        public function setColor(Color $color){
+            $this->color = $color;
+        }
+        abstract public function draw();
+    }
+    
+#### 第二步：实现具体化实现角色（Concrete Implementor）
+
+
+    class Red implements Color{
+        public function showColor(){
+            return "red";
+        }
+    }
+    
+    class Green implements Color{
+        public function showColor(){
+            return "green";
+        }
+    }
+    
+#### 第三步：实现扩展抽象化（Refined Abstraction）角色
+
+    class Square extends Shape{
+        public function draw(){
+            echo "i am " . $this->color->showColor() . " square\n";
+        }
+    }
+    
+    
+#### 第四步：测试
+
+    $redSquare = new Square(new Red());
+    $redSquare->draw();
+    $greenSquare = new Square(new Green());
+    $greenSquare->draw();
     
 
  
