@@ -244,5 +244,85 @@
     $greenSquare = new Square(new Green());
     $greenSquare->draw();
     
+## 4.装饰模式（Decorator）
+
+ 在现实生活中，常常需要对现有产品增加新的功能或美化其外观，如房子装修、相片加相框等。
+ 
+### 为什么需要装饰模式？
+    
+ 在软件开发过程中，有时想用一些现存的组件。这些组件可能只是完成了一些核心功能。但在不改变其结构的情况下，可以动态地扩展其功能。所有这些都可以釆用装饰模式来实现。
+ 
+### 什么是装饰模式？
+
+ 装饰（Decorator）模式的定义：指在不改变现有对象结构的情况下，动态地给该对象增加一些职责（即增加其额外功能）的模式，它属于对象结构型模式。
+ 
+装饰模式主要包含以下角色。
+
++ 抽象构件（Component）角色：定义一个抽象接口以规范准备接收附加责任的对象。
++ 具体构件（Concrete Component）角色：实现抽象构件，通过装饰角色为其添加一些职责。
++ 抽象装饰（Decorator）角色：继承抽象构件，并包含具体构件的实例，可以通过其子类扩展具体构件的功能。
++ 具体装饰（ConcreteDecorator）角色：实现抽象装饰的相关方法，并给具体构件对象添加附加的责任。
+
+### 实例
+
+比如现在有一个输出字符串接口，现在只能输出原有字符串，现在想要增加输出JSON，XML等字符串的功能。
+
+#### 第一步：先定义系统中已经存在的构件
+
+    Interface Component{
+        public function renderData();
+    }
+    
+    class ConcreteComponent implements Component{
+        public $data; 
+           
+        public function __construct($data){
+            $this->data = $data;
+        }
+        //输出字符串功能
+        public function renderData(){
+            return $this->data;      
+        }
+    }
+
+#### 第二步：定义一个抽象装饰角色
+
+    abstract class Decorator implements Component
+    {
+        protected $component;
+    
+        public function __construct(Component $component)
+        {
+            $this->component = $component;
+        }
+    }
+
+#### 第三步：定义具体的装饰类
+
+    // Json装饰类
+    class JsonComponent extends Decorator{
+        public function renderData(){
+            return json_encode($this->component->renderData());
+        }
+    }
+    
+    // XML装饰类
+    class XmlComponent extends Decorator{
+       public function renderData(){
+           return "this is Xml renderData method";
+       }
+    }
+
+#### 第四步：测试
+
+    $component = new ConcreteComponent(["1", "2"]);
+    var_dump($component->renderData());
+    
+    $jsonComponent = new JsonComponent($component);
+    var_dump($jsonComponent->renderData());
+    
+    $xmlComponent = new XmlComponent($component);
+    var_dump($xmlComponent->renderData());
+
 
  
