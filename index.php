@@ -18,7 +18,7 @@ foreach($dir_list as $key => $value){
 				if ($file != "." && $file != "..")
 				{
 					$file1 = explode('.', $file);
-					if ($file1[1] == 'md') {
+					if (!empty($file1) && $file1[1] == 'md') {
 //					  $file_list[$value][] = iconv('GB2312', 'UTF-8', $file1[0]);
                         $file_list[$value][] = $file1[0];
 					}
