@@ -57,7 +57,7 @@ function selectSort($array){
         $p = $i;
         for ($j = $i + 1; $j < $count; $j++){
             if ($array[$j] < $array[$i]){
-                $p = $i;
+                $p = $j;
             }
         }
 
@@ -68,4 +68,29 @@ function selectSort($array){
         }
     }
     return $array;
+}
+
+/**
+ * 插入排序
+ * @param $array
+ * @return mixed
+ */
+function insertSort($array){
+    $count = count($array);
+    for ($i = 1; $i < $count; $i++){
+        $tmp = $array[$i];
+        for ($j = $i - 1; $j >= 0; $j--){
+            if ($tmp < $array[$j]){
+                $array[$j + 1] = $array[$j];
+                $array[$j] = $tmp;
+            }else{
+                break;
+            }
+        }
+    }
+    return $array;
+}
+
+function quickSort($array){
+
 }
